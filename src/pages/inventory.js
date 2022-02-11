@@ -1,4 +1,4 @@
-import Catalog from '../components/Catalog/Catalog';
+import Catalog from '../components/Invertory/Invertory';
 
 const CatalogPage = () => {
   return <Catalog />;

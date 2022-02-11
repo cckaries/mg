@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import styles from './App.module.scss';
 import Header from './components/shared/Header/Header';
-import CatalogPage from './pages/catalog';
+import InventoryPage from './pages/inventory';
 
 function App() {
   return (
@@ -12,7 +12,7 @@ function App() {
       <main>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-            <Route exact path="/" element={<CatalogPage />} />
+            <Route exact path="/" element={<InventoryPage />} />
           </Routes>
         </Suspense>
       </main>

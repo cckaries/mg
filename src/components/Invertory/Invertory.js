@@ -1,9 +1,9 @@
 import { useEffect, useReducer } from 'react';
 import cx from 'classnames';
 
-import styles from './Catalog.module.scss';
+import styles from './Invertory.module.scss';
 
-const Catalog = props => {
+const Invertory = props => {
   const [{ isPageReady }, setState] = useReducer(
     (prevState, nextState) => ({ ...prevState, ...nextState }),
     { isPageReady: false }
@@ -11,9 +11,9 @@ const Catalog = props => {
 
   return (
     <div id="container" className={styles.Container}>
-      catalog component
+      Invertory Manager
     </div>
   );
 };
 
-export default Catalog;
+export default Invertory;
