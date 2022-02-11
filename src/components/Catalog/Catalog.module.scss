@@ -1,0 +1,12 @@
+.Container {
+  flex: 1;
+  display: flex;
+  border: 1px dotted blue;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border: 1px dotted purple;
+  }
+}
