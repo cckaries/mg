@@ -32,30 +32,52 @@ const Invertory = ({
       const processedKeyword = searchText
         .toLowerCase()
         .replace(specialCharsRegex, '');
-      const nextProcessedTitles = titles?.filter(title => {
-        const processedSeasons = title.seasons?.filter(season => {
-          const processedEpisodes = season.episodes?.filter(episode =>
-            episode.episode_name
+      const nextProcessedTitles = titles
+        ?.map(title => {
+          const processedSeasons = title.seasons
+            ?.map(season => {
+              const processedEpisodes = season.episodes?.filter(episode =>
+                episode.episode_name
+                  ?.toLowerCase()
+                  .replace(specialCharsRegex, '')
+                  .includes(processedKeyword)
+              );
+
+              if (
+                !season.season_name
+                  ?.toLowerCase()
+                  .replace(specialCharsRegex, '')
+                  .includes(processedKeyword) &&
+                !processedEpisodes?.length
+              ) {
+                return null;
+              }
+
+              const tempSeason = { ...season };
+              if (!!processedEpisodes?.length) {
+                tempSeason.episodes = processedEpisodes;
+              }
+              return tempSeason;
+            })
+            .filter(a => !!a);
+
+          if (
+            !title.title_name
               ?.toLowerCase()
               .replace(specialCharsRegex, '')
-              .includes(processedKeyword)
-          );
+              .includes(processedKeyword) &&
+            !processedSeasons?.length
+          ) {
+            return null;
+          }
 
-          return (
-            season.season_name
-              ?.toLowerCase()
-              .replace(specialCharsRegex, '')
-              .includes(processedKeyword) || !!processedEpisodes?.length
-          );
-        });
-
-        return (
-          title.title_name
-            ?.toLowerCase()
-            .replace(specialCharsRegex, '')
-            .includes(processedKeyword) || !!processedSeasons?.length
-        );
-      });
+          const tempTitle = { ...title };
+          if (!!processedSeasons?.length) {
+            tempTitle.seasons = processedSeasons;
+          }
+          return tempTitle;
+        })
+        .filter(a => !!a);
 
       setState({ processedTitles: nextProcessedTitles });
     }, 300); // throttling

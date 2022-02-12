@@ -65,7 +65,7 @@ const Tr = ({
       <td>{type}</td>
       <td>{season}</td>
       <td>{episode}</td>
-      <td>{format(published, 'MMM. d, yyyy')}</td>
+      <td>{!!published && format(published, 'MMM. d, yyyy')}</td>
       <td>
         <Toggle checked={isProgrammable} onChange={onProgrammableButtonClick} />
         <div className={styles.ProgrammableLabel}>{programmableLabel}</div>
