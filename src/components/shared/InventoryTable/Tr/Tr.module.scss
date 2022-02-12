@@ -9,6 +9,11 @@
     max-height: 0;
     overflow: hidden;
     border-width: 0;
+
+  }
+
+  &.shown {
+    animation: flashAnim 1s ease-out;
   }
 
   &.Season {
@@ -35,5 +40,17 @@
 
   &.expanded {
     transform: rotate(90deg);
+  }
+}
+
+@keyframes flashAnim {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: rgba(0, 102, 204, 0.3);
+  }
+  100% {
+    background-color: transparent;
   }
 }

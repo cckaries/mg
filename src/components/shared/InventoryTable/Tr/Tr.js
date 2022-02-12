@@ -14,6 +14,7 @@ const Tr = ({
   isProgrammable = false,
   hasChildren = false,
   isExpanded = false,
+  isHideable = false,
   isHidden = false,
   onExpandButtonClick = () => {},
   onProgrammableButtonClick = () => {},
@@ -42,7 +43,7 @@ const Tr = ({
         styles.Container,
         styles[type],
         hasChildren && styles.hasChildren,
-        isHidden && styles.hidden
+        isHidden ? styles.hidden : isHideable && styles.shown
       )}
     >
       <td>

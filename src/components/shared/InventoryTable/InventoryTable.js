@@ -35,6 +35,7 @@ const InventoryTable = ({ titles = [] }) => {
       isProgrammable={isProgrammable}
       hasChildren={hasChildren}
       isExpanded={isExpanded}
+      isHideable={type === 'Season' || type === 'Episode'}
       isHidden={isHidden}
       onExpandButtonClick={onExpandButtonClick}
       onProgrammableButtonClick={onProgrammableButtonClick}
