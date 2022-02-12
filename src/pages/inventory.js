@@ -1,7 +1,7 @@
-import Catalog from '../components/Invertory/Invertory';
+import Invertory from '../components/Invertory/Invertory';
 
-const CatalogPage = () => {
-  return <Catalog />;
+const InventoryPage = () => {
+  return <Invertory />;
 };
 
-export default CatalogPage;
+export default InventoryPage;
