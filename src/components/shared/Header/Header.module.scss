@@ -1,6 +1,51 @@
 .Container {
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   align-items: center;
-  height: 3rem;
-  border: 1px dotted red;
+  width: 100vw;
+  height: 4rem;
+  min-height: 4rem;
+  color: #fff;
+  box-shadow: 0px 2px 2px 0px #00000026;
+
+  > div {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}
+
+.Container > .Logo {
+  justify-content: center;
+  width: 10vw;
+  min-width: 150px;
+  background-color: #000;
+  padding: 0 1.5rem;
+}
+
+.Container > .Navbar {
+  flex: 1;
+  background-color: #e31e30;
+}
+
+.Container > .Navbar > .Nav {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  &.active {
+    border-bottom: 4px solid #fff;
+  }
+
+  > span {
+    margin-left: 0.5rem;
+    font-size: 1rem;
+  }
 }
