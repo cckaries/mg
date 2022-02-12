@@ -4,6 +4,7 @@ import styles from './Invertory.module.scss';
 import InventoryTable from '../shared/InventoryTable/InventoryTable';
 import Search from '../shared/Search/Search';
 
+const specialCharsRegex = /[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_\s]/g;
 let searchTimer;
 
 const Invertory = ({
@@ -12,76 +13,90 @@ const Invertory = ({
   onGetTitles = () => {},
   onSetProgrammable = () => {},
 }) => {
-  const [{ searchText, processedTitles }, setState] = useReducer(
+  const [{ searchText, searchResults }, setState] = useReducer(
     (prevState, nextState) => ({ ...prevState, ...nextState }),
     {
       searchText: '',
-      processedTitles: [],
+      searchResults: [],
     }
   );
+
+  const runSearch = () => {
+    const processedKeyword = searchText
+      .toLowerCase()
+      .replace(specialCharsRegex, '');
+    const nextResults = titles
+      ?.map(title => {
+        const filteredSeasons = title.seasons
+          ?.map(season => {
+            const filteredEpisodes = season.episodes?.filter(episode =>
+              episode.episode_name
+                ?.toLowerCase()
+                .replace(specialCharsRegex, '')
+                .includes(processedKeyword)
+            );
+
+            if (
+              !season.season_name
+                ?.toLowerCase()
+                .replace(specialCharsRegex, '')
+                .includes(processedKeyword) &&
+              !filteredEpisodes?.length
+            ) {
+              return null;
+            }
+
+            const tempSeason = { ...season };
+            if (!!filteredEpisodes?.length) {
+              tempSeason.episodes = filteredEpisodes;
+            }
+            return tempSeason;
+          })
+          .filter(a => !!a);
+
+        if (
+          !title.title_name
+            ?.toLowerCase()
+            .replace(specialCharsRegex, '')
+            .includes(processedKeyword) &&
+          !filteredSeasons?.length
+        ) {
+          return null;
+        }
+
+        const tempTitle = { ...title };
+        if (!!filteredSeasons?.length) {
+          tempTitle.seasons = filteredSeasons;
+        }
+        return tempTitle;
+      })
+      .filter(a => !!a);
+
+    setState({ searchResults: nextResults });
+  };
 
   useEffect(() => {
     onGetTitles();
   }, []);
 
   useEffect(() => {
-    if (!!searchTimer) clearTimeout(searchTimer);
-    if (!searchText.trim().length) return setState({ processedTitles: [] });
-    searchTimer = setTimeout(() => {
-      const specialCharsRegex = /[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_\s]/g;
-      const processedKeyword = searchText
-        .toLowerCase()
-        .replace(specialCharsRegex, '');
-      const nextProcessedTitles = titles
-        ?.map(title => {
-          const processedSeasons = title.seasons
-            ?.map(season => {
-              const processedEpisodes = season.episodes?.filter(episode =>
-                episode.episode_name
-                  ?.toLowerCase()
-                  .replace(specialCharsRegex, '')
-                  .includes(processedKeyword)
-              );
-
-              if (
-                !season.season_name
-                  ?.toLowerCase()
-                  .replace(specialCharsRegex, '')
-                  .includes(processedKeyword) &&
-                !processedEpisodes?.length
-              ) {
-                return null;
-              }
-
-              const tempSeason = { ...season };
-              if (!!processedEpisodes?.length) {
-                tempSeason.episodes = processedEpisodes;
-              }
-              return tempSeason;
-            })
-            .filter(a => !!a);
-
-          if (
-            !title.title_name
-              ?.toLowerCase()
-              .replace(specialCharsRegex, '')
-              .includes(processedKeyword) &&
-            !processedSeasons?.length
-          ) {
-            return null;
-          }
-
-          const tempTitle = { ...title };
-          if (!!processedSeasons?.length) {
-            tempTitle.seasons = processedSeasons;
-          }
-          return tempTitle;
-        })
-        .filter(a => !!a);
-
-      setState({ processedTitles: nextProcessedTitles });
-    }, 300); // throttling
+    if (!!searchTimer) {
+      clearTimeout(searchTimer);
+    }
+    if (!searchText.trim().length) {
+      return setState({ searchResults: [] });
+    }
+    searchTimer = setTimeout(runSearch, 300); // throttling
   }, [searchText]);
+
+  useEffect(() => {
+    if (!!searchTimer) {
+      clearTimeout(searchTimer);
+    }
+    if (!!searchText.trim()) {
+      searchTimer = setTimeout(runSearch, 0);
+    }
+  }, [titles]);
 
   return (
     <div id="container" className={styles.Container}>
@@ -97,7 +112,7 @@ const Invertory = ({
           <div>Loading...</div>
         ) : (
           <InventoryTable
-            titles={!!searchText.trim() ? processedTitles : titles}
+            titles={!!searchText.trim() ? searchResults : titles}
             onSetProgrammable={onSetProgrammable}
           />
         )}
