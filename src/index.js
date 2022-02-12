@@ -4,9 +4,14 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import App from './App';
 import store from './store/';
+
+library.add( far, fas);
 
 ReactDOM.render(
   <React.StrictMode>

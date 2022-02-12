@@ -1,17 +1,85 @@
 import { useEffect, useReducer } from 'react';
-import cx from 'classnames';
 
 import styles from './Invertory.module.scss';
+import InventoryTable from '../shared/InventoryTable/InventoryTable';
+import Search from '../shared/Search/Search';
 
-const Invertory = props => {
-  const [{ isPageReady }, setState] = useReducer(
+let searchTimer;
+
+const Invertory = ({
+  titles = [],
+  isTitlesReady = false,
+  onGetTitles = () => {},
+  onSetProgrammable = () => {},
+}) => {
+  const [{ searchText, processedTitles }, setState] = useReducer(
     (prevState, nextState) => ({ ...prevState, ...nextState }),
-    { isPageReady: false }
+    {
+      searchText: '',
+      processedTitles: [],
+    }
   );
+
+  useEffect(() => {
+    onGetTitles();
+  }, []);
+
+  useEffect(() => {
+    if (!!searchTimer) clearTimeout(searchTimer);
+    if (!searchText.trim().length) return setState({ processedTitles: [] });
+    searchTimer = setTimeout(() => {
+      const specialCharsRegex = /[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_\s]/g;
+      const processedKeyword = searchText
+        .toLowerCase()
+        .replace(specialCharsRegex, '');
+      const nextProcessedTitles = titles?.filter(title => {
+        const processedSeasons = title.seasons?.filter(season => {
+          const processedEpisodes = season.episodes?.filter(episode =>
+            episode.episode_name
+              ?.toLowerCase()
+              .replace(specialCharsRegex, '')
+              .includes(processedKeyword)
+          );
+
+          return (
+            season.season_name
+              ?.toLowerCase()
+              .replace(specialCharsRegex, '')
+              .includes(processedKeyword) || !!processedEpisodes?.length
+          );
+        });
+
+        return (
+          title.title_name
+            ?.toLowerCase()
+            .replace(specialCharsRegex, '')
+            .includes(processedKeyword) || !!processedSeasons?.length
+        );
+      });
+
+      setState({ processedTitles: nextProcessedTitles });
+    }, 300); // throttling
+  }, [searchText]);
 
   return (
     <div id="container" className={styles.Container}>
-      Invertory Manager
+      <h1>Invertory Manager</h1>
+      <div className={styles.Search}>
+        <Search
+          placeholder="Search for titles in inventory"
+          onChange={e => setState({ searchText: e.target.value })}
+        />
+      </div>
+      <div className={styles.Table}>
+        {!isTitlesReady ? (
+          <div>Loading...</div>
+        ) : (
+          <InventoryTable
+            titles={!!searchText.trim() ? processedTitles : titles}
+            onSetProgrammable={onSetProgrammable}
+          />
+        )}
+      </div>
     </div>
   );
 };

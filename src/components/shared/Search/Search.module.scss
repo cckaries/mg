@@ -1,0 +1,25 @@
+.Container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 200px;
+  height: 2.5rem;
+  padding-left: 1rem;
+  border: 2px solid #b2b2b2;
+  border-radius: 4px;
+  background-color: #f6f6f6;
+  color: #727272;
+  cursor: text;
+
+  &.active {
+    border-color: #06c;
+  }
+}
+
+.Container > input {
+  flex: 1;
+  padding: 0 0.5rem;
+  border: 0;
+  outline: 0;
+  background: none;
+}

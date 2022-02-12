@@ -1,12 +1,24 @@
 .Container {
-  flex: 1;
-  display: flex;
-  border: 1px dotted blue;
-
   > div {
     display: flex;
-    flex-direction: column;
-    flex: 1;
-    border: 1px dotted purple;
+
+    &:not(:first-child) {
+      margin-top: 1rem;
+    }
   }
+}
+
+.Container > h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.Container > .Search {
+  width: 20vw;
+  min-width: 300px;
+}
+
+.Container > .Table {
+  flex: 1;
+  overflow: auto;
 }

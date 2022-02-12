@@ -1,0 +1,59 @@
+.Container {
+  &.hasChildren {
+    > td > .Icon {
+      display: flex;
+    }
+  }
+
+  &.hidden {
+    max-height: 0;
+    overflow: hidden;
+    border-width: 0;
+  }
+
+  &.shown {
+    animation: flashAnim 1s ease-out;
+  }
+
+  &.Season {
+    > td:first-child {
+      padding-left: 3%;
+    }
+  }
+
+  &.Episode {
+    > td:first-child {
+      padding-left: 6%;
+    }
+  }
+}
+
+.Container > td > .Icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  transition: transform 0.35s ease-out;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}
+
+.Container > td > .ProgrammableLabel {
+  margin-left: 0.5rem;
+}
+
+@keyframes flashAnim {
+  0% {
+    background-color: transparent;
+  }
+  20% {
+    background-color: rgba(0, 102, 204, 0.3);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
