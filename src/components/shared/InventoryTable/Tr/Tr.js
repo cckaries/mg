@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import styles from './Tr.module.scss';
+import Toggle from '../../Toggle/Toggle';
 
 const Tr = ({
   id,
@@ -60,13 +61,11 @@ const Tr = ({
       <td>{season}</td>
       <td>{episode}</td>
       <td>{format(published, 'MMM. d, yyyy')}</td>
-      <td onClick={onProgrammableButtonClick}>
-        <button
-          className={cx(styles.Toggle, isProgrammable && styles.enabled)}
-          onClick={() => {}}
-        >
-          {isProgrammable.toString()}
-        </button>
+      <td>
+        <Toggle
+          defaultChecked={isProgrammable}
+          onChange={onProgrammableButtonClick}
+        />
         <div className={styles.ProgrammableLabel}>{programmableLabel}</div>
       </td>
     </tr>
