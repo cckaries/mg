@@ -1,0 +1,50 @@
+.Wrapper {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 1.5rem;
+  min-width: 3rem;
+  padding: 1px;
+  cursor: pointer;
+}
+
+.Wrapper > .Slider {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  left: 1px;
+  bottom: 1px;
+  display: flex;
+  align-items: center;
+  border-radius: 2.5rem;
+  background-color: #b2b2b2;
+  transition: 0.15s ease-in-out;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 1px 2px 0.25rem rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s ease-in-out;
+  }
+}
+
+.Wrapper > input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+
+  &:checked {
+    + .Slider {
+      background-color: #178613;
+
+      &::before {
+        transform: translateX(100%);
+      }
+    }
+  }
+}
