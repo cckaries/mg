@@ -42,6 +42,10 @@
   }
 }
 
+.Container > td > .ProgrammableLabel {
+  margin-left: 0.5rem;
+}
+
 @keyframes flashAnim {
   0% {
     background-color: transparent;

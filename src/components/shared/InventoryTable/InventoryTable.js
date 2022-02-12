@@ -3,7 +3,7 @@ import { useReducer, Fragment } from 'react';
 import styles from './InventoryTable.module.scss';
 import Tr from './Tr/Tr';
 
-const InventoryTable = ({ titles = [] }) => {
+const InventoryTable = ({ titles = [], onSetProgrammable = () => {} }) => {
   const [{ expandedTitleIds, expandedSeasonIds }, setState] = useReducer(
     (prevState, nextState) => ({ ...prevState, ...nextState }),
     { expandedTitleIds: [], expandedSeasonIds: [] }
@@ -19,6 +19,7 @@ const InventoryTable = ({ titles = [] }) => {
     published = '-',
     isProgrammable = false,
     hasChildren = false,
+    isAllChildrenProgrammable = false,
     isExpanded = false,
     isHidden = false,
     onExpandButtonClick = () => {},
@@ -34,6 +35,7 @@ const InventoryTable = ({ titles = [] }) => {
       published={published}
       isProgrammable={isProgrammable}
       hasChildren={hasChildren}
+      isAllChildrenProgrammable={isAllChildrenProgrammable}
       isExpanded={isExpanded}
       isHideable={type === 'Season' || type === 'Episode'}
       isHidden={isHidden}
@@ -43,10 +45,12 @@ const InventoryTable = ({ titles = [] }) => {
   );
 
   const episodesDom = ({ titleId, seasonId, episodes = [] }) =>
-    episodes.map(episode =>
-      trDom({
+    episodes.map(episode => {
+      const episodeId = episode.episode_id;
+
+      return trDom({
         key: `${titleId}-${seasonId}-${episode.episode_id}`,
-        id: episode.episode_id,
+        id: episodeId,
         name: episode.episode_name,
         type: 'Episode',
         episode: episode.episode_name || episode.episode_number,
@@ -55,8 +59,10 @@ const InventoryTable = ({ titles = [] }) => {
         isHidden:
           !expandedTitleIds.includes(titleId) ||
           !expandedSeasonIds.includes(seasonId),
-      })
-    );
+        onProgrammableButtonClick: state =>
+          onSetProgrammable({ state, titleId, seasonId, episodeId }),
+      });
+    });
 
   const seasonsDom = ({ titleId, seasons = [] }) =>
     seasons.map(season => {
@@ -75,6 +81,9 @@ const InventoryTable = ({ titles = [] }) => {
             published: season.publish_timestamp,
             isProgrammable: season.activate,
             hasChildren: hasEpisodes,
+            isAllChildrenProgrammable:
+              hasEpisodes &&
+              !season.episodes.find(episode => !episode.activate),
             isExpanded: expandedSeasonIds.includes(seasonId),
             isHidden: !expandedTitleIds.includes(titleId),
             onExpandButtonClick: () => {
@@ -92,6 +101,8 @@ const InventoryTable = ({ titles = [] }) => {
                 expandedSeasonIds: nextExpandedSeasonIds,
               });
             },
+            onProgrammableButtonClick: state =>
+              onSetProgrammable({ state, titleId, seasonId }),
           })}
           {hasEpisodes &&
             episodesDom({ titleId, seasonId, episodes: season.episodes })}
@@ -116,6 +127,8 @@ const InventoryTable = ({ titles = [] }) => {
           published: title.publish_timestamp,
           isProgrammable: title.activate,
           hasChildren: hasSeasons,
+          isAllChildrenProgrammable:
+            hasSeasons && !title.seasons.find(season => !season.activate),
           isExpanded: expandedTitleIds.includes(titleId),
           onExpandButtonClick: () => {
             let nextExpandedTitleIds = [...expandedTitleIds];
@@ -132,6 +145,8 @@ const InventoryTable = ({ titles = [] }) => {
               expandedTitleIds: nextExpandedTitleIds,
             });
           },
+          onProgrammableButtonClick: state =>
+            onSetProgrammable({ state, titleId }),
         })}
         {hasSeasons && seasonsDom({ titleId, seasons: title.seasons })}
       </Fragment>

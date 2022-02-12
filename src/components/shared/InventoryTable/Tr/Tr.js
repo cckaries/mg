@@ -13,6 +13,7 @@ const Tr = ({
   episode = '-',
   published = '-',
   isProgrammable = false,
+  isAllChildrenProgrammable = false,
   hasChildren = false,
   isExpanded = false,
   isHideable = false,
@@ -27,10 +28,14 @@ const Tr = ({
       programmableLabel = 'Per Episode';
       break;
     case 'Season':
-      programmableLabel = 'All Episode';
+      if (isAllChildrenProgrammable) {
+        programmableLabel = 'All Episodes';
+      }
       break;
     case 'Series':
-      programmableLabel = 'All Seasons';
+      if (isAllChildrenProgrammable) {
+        programmableLabel = 'All Seasons';
+      }
       break;
     default:
       programmableLabel = 'Single Movie';
@@ -62,10 +67,7 @@ const Tr = ({
       <td>{episode}</td>
       <td>{format(published, 'MMM. d, yyyy')}</td>
       <td>
-        <Toggle
-          defaultChecked={isProgrammable}
-          onChange={onProgrammableButtonClick}
-        />
+        <Toggle checked={isProgrammable} onChange={onProgrammableButtonClick} />
         <div className={styles.ProgrammableLabel}>{programmableLabel}</div>
       </td>
     </tr>

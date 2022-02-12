@@ -10,6 +10,8 @@ const Invertory = ({
   titles = [],
   isTitlesReady = false,
   onGetTitles = () => {},
+  onPutTitles = () => {},
+  onSetProgrammable = () => {},
 }) => {
   const [{ searchText, processedTitles }, setState] = useReducer(
     (prevState, nextState) => ({ ...prevState, ...nextState }),
@@ -28,12 +30,33 @@ const Invertory = ({
     if (!searchText.trim().length) return setState({ processedTitles: [] });
     searchTimer = setTimeout(() => {
       const specialCharsRegex = /[~`!@#$%^&*()+={}\[\];:\'\"<>.,\/\\\?-_\s]/g;
-      const nextProcessedTitles = titles.filter(title =>
-        title.title_name
-          ?.toLowerCase()
-          .replace(specialCharsRegex, '')
-          .includes(searchText.toLowerCase().replace(specialCharsRegex, ''))
-      );
+      const processedKeyword = searchText
+        .toLowerCase()
+        .replace(specialCharsRegex, '');
+      const nextProcessedTitles = titles?.filter(title => {
+        const processedSeasons = title.seasons?.filter(season => {
+          const processedEpisodes = season.episodes?.filter(episode =>
+            episode.episode_name
+              ?.toLowerCase()
+              .replace(specialCharsRegex, '')
+              .includes(processedKeyword)
+          );
+
+          return (
+            season.season_name
+              ?.toLowerCase()
+              .replace(specialCharsRegex, '')
+              .includes(processedKeyword) || !!processedEpisodes?.length
+          );
+        });
+
+        return (
+          title.title_name
+            ?.toLowerCase()
+            .replace(specialCharsRegex, '')
+            .includes(processedKeyword) || !!processedSeasons?.length
+        );
+      });
 
       setState({ processedTitles: nextProcessedTitles });
     }, 300); // throttling
@@ -54,6 +77,7 @@ const Invertory = ({
         ) : (
           <InventoryTable
             titles={!!searchText.trim() ? processedTitles : titles}
+            onSetProgrammable={onSetProgrammable}
           />
         )}
       </div>
