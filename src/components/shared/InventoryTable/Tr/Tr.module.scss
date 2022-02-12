@@ -1,0 +1,39 @@
+.Container {
+  &.hasChildren {
+    > td > .Icon {
+      display: flex;
+    }
+  }
+
+  &.hidden {
+    max-height: 0;
+    overflow: hidden;
+    border-width: 0;
+  }
+
+  &.Season {
+    > td:first-child {
+      padding-left: 3%;
+    }
+  }
+
+  &.Episode {
+    > td:first-child {
+      padding-left: 6%;
+    }
+  }
+}
+
+.Container > td > .Icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  transition: transform 0.35s ease-out;
+
+  &.expanded {
+    transform: rotate(90deg);
+  }
+}

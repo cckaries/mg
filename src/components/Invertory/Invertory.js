@@ -2,8 +2,8 @@ import { useEffect, useReducer } from 'react';
 import cx from 'classnames';
 
 import styles from './Invertory.module.scss';
+import InventoryTable from '../shared/InventoryTable/InventoryTable';
 import Search from '../shared/Search/Search';
-import Table from '../shared/Table/Table';
 
 const Invertory = props => {
   const [{ isPageReady, searchText }, setState] = useReducer(
@@ -18,7 +18,7 @@ const Invertory = props => {
         <Search placeholder="Search for titles in inventory" />
       </div>
       <div className={styles.Table}>
-        <Table />
+        <InventoryTable titles={titles} />
       </div>
     </div>
   );
