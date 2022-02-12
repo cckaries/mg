@@ -67,7 +67,7 @@ const Tr = ({
         >
           {isProgrammable.toString()}
         </button>
-        <span>{programmableLabel}</span>
+        <div className={styles.ProgrammableLabel}>{programmableLabel}</div>
       </td>
     </tr>
   );
