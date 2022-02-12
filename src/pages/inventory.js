@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 
 import Invertory from '../components/Invertory/Invertory';
-import { getTitlesThunk, putTitlesThunk, titlesActions } from '../store/titles';
+import { getTitlesThunk,  titlesActions } from '../store/titles';
 
 const InventoryPage = () => {
   const dispatch = useDispatch();
@@ -12,7 +12,6 @@ const InventoryPage = () => {
       titles={titles}
       isTitlesReady={isTitlesReady}
       onGetTitles={() => dispatch(getTitlesThunk())}
-      onPutTitles={() => dispatch(putTitlesThunk())}
       onSetProgrammable={(payload) => dispatch(titlesActions.setProgrammable(payload))}
     />
   );

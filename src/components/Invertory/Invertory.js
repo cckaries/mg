@@ -10,7 +10,6 @@ const Invertory = ({
   titles = [],
   isTitlesReady = false,
   onGetTitles = () => {},
-  onPutTitles = () => {},
   onSetProgrammable = () => {},
 }) => {
   const [{ searchText, processedTitles }, setState] = useReducer(
