@@ -11,7 +11,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import App from './App';
 import store from './store/';
 
-library.add( far, fas);
+library.add(far, fas);
 
 ReactDOM.render(
   <React.StrictMode>

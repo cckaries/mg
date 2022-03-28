@@ -21,54 +21,47 @@ const Invertory = ({
     }
   );
 
+  const processString = (text = '') => {
+    return text.replace(specialCharsRegex, '').toLowerCase();
+  };
+
   const runSearch = () => {
-    const processedKeyword = searchText
-      .toLowerCase()
-      .replace(specialCharsRegex, '');
+    const processedKeyword = processString(searchText);
     const nextResults = titles
       ?.map(title => {
         const filteredSeasons = title.seasons
           ?.map(season => {
             const filteredEpisodes = season.episodes?.filter(episode =>
-              episode.episode_name
-                ?.toLowerCase()
-                .replace(specialCharsRegex, '')
-                .includes(processedKeyword)
+              processString(episode.episode_name).includes(processedKeyword)
             );
 
             if (
-              !season.season_name
-                ?.toLowerCase()
-                .replace(specialCharsRegex, '')
-                .includes(processedKeyword) &&
+              !processString(season.season_name).includes(processedKeyword) &&
               !filteredEpisodes?.length
             ) {
               return null;
             }
 
-            const tempSeason = { ...season };
-            if (!!filteredEpisodes?.length) {
-              tempSeason.episodes = filteredEpisodes;
-            }
-            return tempSeason;
+            return {
+              ...season,
+              episodes: !!filteredEpisodes?.length
+                ? filteredEpisodes
+                : season.episodes,
+            };
           })
           .filter(a => !!a);
 
         if (
-          !title.title_name
-            ?.toLowerCase()
-            .replace(specialCharsRegex, '')
-            .includes(processedKeyword) &&
+          !processString(title.title_name).includes(processedKeyword) &&
           !filteredSeasons?.length
         ) {
           return null;
         }
 
-        const tempTitle = { ...title };
-        if (!!filteredSeasons?.length) {
-          tempTitle.seasons = filteredSeasons;
-        }
-        return tempTitle;
+        return {
+          ...title,
+          seasons: !!filteredSeasons?.length ? filteredSeasons : title.seasons,
+        };
       })
       .filter(a => !!a);
 
